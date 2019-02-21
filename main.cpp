@@ -53,20 +53,17 @@ int main(int argc, char *argv[]){
     std::string buildlist = argv[2];
 
 
-	std::cout<<race<<buildlist<<std::endl;
+	std::cout<<race<<"Reading Build List from"<<buildlist<<std::endl;
 
-    // ----------------------read the build list to vector "build"-----//
+    // ----------------------read the build list to vector "build"-------------------------
 
     std::vector<std::string> build;      // vector to store the build list
-
     std::ifstream buildListIn;  
-
-    buildListIn.open(buildlist);
-
-    std::string item;                    // to store each line of buid list
+	buildListIn.open(buildlist);
+	std::string item;                    // to store each line of buid list
 
     if(!buildListIn){
-    	std::cout<<"error opening build List"<<std::endl;
+    	std::cout<<"Error opening :"<<buildlist<<std::endl;
 
     }
 
@@ -76,7 +73,6 @@ int main(int argc, char *argv[]){
     		
     	}
     }
-
 	buildListIn.close();
 
 	/*  print out the buildlist
@@ -85,14 +81,14 @@ int main(int argc, char *argv[]){
 	for(iter=build.begin() ; iter != build.end() ; ++iter ) {
 		std::cout<<*iter<<"|";
 	}
-
+	*/
 
     for(auto i:build){
     	std::cout<<i <<" ";
     }	
-	*/
+	
 
-	// check for dependencies
+	//--------------------------- check for build list validity-------------------------------
 
 	Gameinfo game;
 
@@ -101,17 +97,20 @@ int main(int argc, char *argv[]){
 	tmplist.push_back("command_center"); // store the initial condition
 	tmplist.push_back("scv");
 
-	int flag =0;
-	for(int builidItr =0; builidItr < build.size(); builidItr++) { // loop thr build list
+	int flag =0;                         // valid buildlist
+	for(int builidItem =0; builidItem < build.size(); builidItem++) { // loop thr build list
 		//int index=-1;
 		//std::map < std::string, std::tuple <double, double, int, double, std::string, std::string > >::iterator i;
 		//for(auto i=Validity.cbegin() ; i != Validity.cend() ; ++i) // loop thr VAlidity
-		for (auto invItr:game.inventory) {
-			if(game.searchName(build[builidItr])) {
+		for (auto invItr:game.inventory) {   // .begin()
+			if(game.searchName(build[builidItem])) {
 				auto index = invItr;  // index of build item in inventory map
 
+				tmplist.push_back(build[builidItem]);
+
 				// Check if dependency col is 'null' OR if temp buildlist has item in 'depend' col
-				if(std::get<5>(index.second) == "null" || searchBuildDepend(std::get<5>(index.second),tmplist))
+				 if(std::get<5>(index.second) == "null" || searchBuildDepend(std::get<5>(index.second),tmplist))
+				// if(std::get<5>(index.second) == "null" || searchBuildDepend(game.searchDependency(builidItem),tmplist))
 					continue;
 
 				// Check if tmp build list contain item in produced by col
@@ -133,59 +132,64 @@ int main(int argc, char *argv[]){
 	}
 
 
-if(flag == 0)
-	std::cout<<"\n ------ VALID BUILD LIST ------ \n";
-else
-	std::cout<<"\n -----NON VALID BUILD-LIST------ \n";
+	if(flag == 0)
+		std::cout<<"\n ------ VALID BUILD LIST ------ \n";
+	else
+		std::cout<<"\n -----NON VALID BUILD-LIST------ \n";
 
 
 
 
 
-Resources resources = *new Resources(50,0,6,11,0); // cc and 6 worker
+	Resources resources = *new Resources(50,0,6,11,0); // cc and 6 worker
 
-Unit_Current unitCurrent = *new Unit_Current();
-Building_Current buildingCurrent= *new Building_Current();
+	Unit_Current unitCurrent = *new Unit_Current();
+	Building_Current buildingCurrent= *new Building_Current();
 
-Units_Build_List unitsBuildList = *new Units_Build_List();
-Buildings_Build_List buildingsBuildlist = *new Buildings_Build_List();
-
-
-Building commandcenter(findName("commanc center"), id,sdj, sadjf, json);
+	Units_Build_List unitsBuildList = *new Units_Build_List();
+	Buildings_Build_List buildingsBuildlist = *new Buildings_Build_List();
 
 
-std::vector<Building> buildignStorage;
-buildignStorage.push_back(commandcenter);
+	auto temp = game.searchItem("command_center");
+	// map | id | time | res
+	Building command_center(temp, 1,1, resources);
 
 
-std::map < std::string, std::tuple <double, double, int, double, std::string, std::string>  > gamelist ;
-game.searchItem("scv");
-gamelist.insert(game.searchItem("scv"));
-
-
-
-
-for(int i=0 ; i<1000 ; i++) {
-
-
-
-
-}
-
-
+	std::vector<Building> buildignStorage;
+	buildignStorage.push_back(command_center);
 
 /*
+	std::map < std::string, std::tuple <double, double, int, double, std::string, std::string>  > gamelist ;
+	game.searchItem("scv");
+	gamelist.insert(game.searchItem("scv"));
+*/
 
-std::string s = "[\"nlohmann\", \"json\"]";
-json second = json::parse(s);
 
-auto j3 = json::parse("{ \"happy\": true, \"pi\": 3.141 }");
-std::string R;
-auto j3 = json::parse(R"(
-	{
-	"happy": true,
-	"pi": 3.141 
+
+	std::vector<std::string>::iterator buildItr = build.begin();   // iterator to go thr build list
+	int time =1;
+	// Game loop
+	while (buildItr != build.end() ) {
+		if(time > 1000) {          
+			std::cout<<"Time Exceeds 1000";
+			break;
+
+		}
+
+
+
+
+
+
+		time++;
+		++buildItr;
 	}
-	)")_json;
-	*/
+
+
+
+
+
+
+
+
 }

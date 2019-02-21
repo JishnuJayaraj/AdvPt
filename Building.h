@@ -21,7 +21,13 @@ class Building : public Game_Object
 
 	}
 
-	Building(std::map < std::string, std::tuple <double, double, int, double, std::string, std::string>> building, int time, json *json, resources *resources){
+	Building(std::map < std::string, std::tuple <double, double, int, double, std::string, std::string > > &building, int id, int stime, Resources &res){
+
+		name = building.first ;
+		producedBy = "producedBy";
+		prod_num = id ;
+		start_time = stime;
+
 
 	}
 };

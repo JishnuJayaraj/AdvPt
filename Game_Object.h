@@ -17,7 +17,7 @@ class Game_Object {
 	// int start_energy;
 
 
-	int build_starttime;
+	int start_time;
 	int end_time;
 
 	// pure virtual fn to return the clas type of inherited classes
