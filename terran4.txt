@@ -1,0 +1,11 @@
+scv
+scv
+supply_depot
+barracks
+orbital_command
+marine
+marine
+marine
+marine
+marine
+marine

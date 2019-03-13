@@ -6,6 +6,9 @@
 #include <tuple>
 
 
+template< class T1, class T2 >
+std::map<T1,T2> make_map( T1 t, T2 u );
+
 // ------------------------- Create a map for validity check---------// put this in a new class*****
 
 
@@ -59,8 +62,6 @@
 		
 
 		void printGameinfo () {
-		// iterator to point to a member and iterate through...
-
 		//std::map < std::string, std::tuple <double, double, int, double, std::string, std::string > >::iterator itr;
 
 		//for(itr=inventory.begin() ; itr != inventory.end() ; ++itr )
@@ -69,18 +70,21 @@
 				<<std::get<3>(x.second)<<" "<<std::get<4>(x.second)<<" "<<std::get<5>(x.second)<<std::endl;//*itr.first<<" "<<itr->second<<std::endl;
 			}
 
-
 		}
 
 
 		bool searchName(std::string name) {
 
-			std::string name;
+			std::cout<<"searching :"<<name<<" in inventory and found is :";         // delete
 			bool found=false;
-			std::map < std::string, std::tuple <double, double, int, double, std::string, std::string > >::iterator it= inventory.begin();
-				for(auto it:inventory) { // it=inventory.cbegin() ; it != inventory.cend() ; ++it){ 
-						if(it.first== name)
+			// std::map < std::string, std::tuple <double, double, int, double, std::string, std::string > >::iterator it= inventory.begin();
+				// for(auto it:inventory) { // it=inventory.cbegin() ; it != inventory.cend() ; ++it){ 
+				for(auto it=inventory.begin(); it != inventory.end(); it++) {
+						if(it->first == name) {
 								found=true;
+								break;
+						}
+						                                   
 				}
 			return found;			
 
@@ -90,15 +94,15 @@
 		bool searchProducedBy(std::string item){
 
 			bool found=false;
-			std::map < std::string, std::tuple <double, double, int, double, std::string, std::string > >::iterator it= inventory.begin();
+			// std::map < std::string, std::tuple <double, double, int, double, std::string, std::string > >::iterator it= inventory.begin();
 			/*	for(auto it:inventory) { // it=inventory.cbegin() ; it != inventory.cend() ; ++it){ 
 						if(std::get<4>(it.second) == item)
 								found=true;
 				}
 			*/
-				for(auto it:inventory) { // it=inventory.cbegin() ; it != inventory.cend() ; ++it){ 
-						std::string str = std::get<4>(it.second);
-						if(str.find(item) != std::string::npos)
+				for(auto it=inventory.begin(); it != inventory.end(); it++) { // it=inventory.cbegin() ; it != inventory.cend() ; ++it){ 
+						std::string str = std::get<4>(it->second);
+						if(str.find(item) != std::string::npos)  // take care of "/"
 								found=true;
 				}	
 				return found;
@@ -109,14 +113,14 @@
 		bool searchDependency(std::string item){
 
 			bool found=false;
-			std::map < std::string, std::tuple < double, double, int, double, std::string, std::string > >::iterator it= inventory.begin();
+			//std::map < std::string, std::tuple < double, double, int, double, std::string, std::string > >::iterator it= inventory.begin();
 	/*			for(auto it: inventory) {//(auto it=inventory.cbegin() ; it != inventory.cend() ; ++it){
 						if(std::get<5>(it.second) == item)
 							found=true;
 				}
 
-	*/			for(auto it: inventory) {//(auto it=inventory.cbegin() ; it != inventory.cend() ; ++it){
-						std::string str = std::get<5>(it.second);
+	*/			for(auto it=inventory.begin(); it != inventory.end(); it++) {//(auto it=inventory.cbegin() ; it != inventory.cend() ; ++it){
+						std::string str = std::get<5>(it->second);
 						if(str.find(item) != std::string::npos)
 							found=true;
 				}
@@ -127,14 +131,15 @@
 
 		//  search for "name" and return the whole row of map
 		// const std::map < std::string, std::tuple <double, double, int, double, std::string, std::string> > searchItem(std::string name) {
+		
 		auto searchItem(std::string name) const {
-			std::map < std::string, std::tuple <double, double, int, double, std::string, std::string > >::iterator ite; // = inventory.begin();
+			std::map < std::string, std::tuple <double, double, int, double, std::string, std::string > >::const_iterator ite = inventory.begin();
 
 			ite = inventory.find(name);
 
 
-		//	for(auto it:inventory) { // it=inventory.cbegin() ; it != inventory.cend() ; ++it){ 
-		//		if(it.first== name)
+		//	for(auto ite:inventory) { // it=inventory.cbegin() ; it != inventory.cend() ; ++it){ 
+		//		if(ite.first== name)
 				return *(ite);
 		//	}
 					/*{
@@ -143,8 +148,8 @@
 
 		}*/			
 
-		}
+	}
 	
 
-
+		~Gameinfo() {}
 	};

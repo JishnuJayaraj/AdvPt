@@ -1,0 +1,8 @@
+scv
+scv
+supply_depot
+barracks
+refinery
+factory
+starport
+battlecruiser
